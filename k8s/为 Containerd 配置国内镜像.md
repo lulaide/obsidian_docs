@@ -12,7 +12,10 @@ mkdir -p /etc/containerd/certs.d/docker.io/
 cat <<EOF | sudo tee /etc/containerd/certs.d/docker.io/hosts.toml
 server = "https://docker.io"
 
-[host."https://docker.m.daocloud.io"] capabilities = ["pull", "resolve"]
+[host."https://docker.m.daocloud.io"]
+  capabilities = ["pull", "resolve"]
+[host."https://docker.xuanyuan.me"]
+  capabilities = ["pull", "resolve"]
 EOF
 ```
 
