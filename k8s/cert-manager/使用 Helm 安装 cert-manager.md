@@ -2,6 +2,7 @@
 source: https://cert-manager.io/docs/installation/helm/
 tags:
   - cert-manager
+  - k8s
 ---
 ## 使用 Helm 安装
 

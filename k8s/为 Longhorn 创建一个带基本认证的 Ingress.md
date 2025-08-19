@@ -24,30 +24,30 @@ metadata:
   name: longhorn-ingress
   namespace: longhorn-system
   annotations:
-	# type of authentication
-	nginx.ingress.kubernetes.io/auth-type: basic
-	# prevent the controller from redirecting (308) to HTTPS
-	nginx.ingress.kubernetes.io/ssl-redirect: 'false'
-	# name of the secret that contains the user/password definitions
-	nginx.ingress.kubernetes.io/auth-secret: basic-auth
-	# message to display with an appropriate context why the authentication is required
-	nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
-	# custom max body size for file uploading like backing image uploading
-	nginx.ingress.kubernetes.io/proxy-body-size: 10000m
+    # 认证类型
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # 防止控制器重定向（308）到 HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    # 包含用户/密码定义的 Secret 名称
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    # 显示的提示信息，说明需要认证的原因
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
+    # 自定义请求体最大大小，用于上传文件（例如后端镜像上传）
+    nginx.ingress.kubernetes.io/proxy-body-size: 10000m
 spec:
   ingressClassName: nginx
   rules:
   - http:
-	  paths:
-	  - pathType: Prefix
-		path: "/"
-		backend:
-		  service:
-			name: longhorn-frontend
-			port:
-			  number: 80
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: longhorn-frontend
+            port:
+              number: 80
 ```
-3. 创建 Ingress：
+4. 创建 Ingress：
 ```fallback
 kubectl -n longhorn-system apply -f longhorn-ingress.yml
 ```

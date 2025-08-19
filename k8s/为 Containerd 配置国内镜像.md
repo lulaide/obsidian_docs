@@ -1,14 +1,9 @@
 [Containerd 镜像配置文档](https://github.com/containerd/containerd/blob/main/docs/hosts.md#registry-host-namespace)
 
-### 创建 docker.io 的文件夹
+### 配置 docker.io
 
 ```
 mkdir -p /etc/containerd/certs.d/docker.io/
-```
-
-### 配置 docker.m.daocloud.io`
-
-```
 cat <<EOF | sudo tee /etc/containerd/certs.d/docker.io/hosts.toml
 server = "https://docker.io"
 
@@ -16,6 +11,20 @@ server = "https://docker.io"
   capabilities = ["pull", "resolve"]
 [host."https://docker.xuanyuan.me"]
   capabilities = ["pull", "resolve"]
+EOF
+```
+
+## 配置 registry.k8s.io
+
+```
+mkdir -p /etc/containerd/certs.d/registry.k8s.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/registry.k8s.io/hosts.toml
+server = "https://registry.k8s.io"
+
+[host."https://k8s.m.daocloud.io"]
+  capabilities = ["pull", "resolve"]
+[host."https://registry.k8s.io"]
+  capabilities = ["pull", "resolve", "push"]
 EOF
 ```
 
