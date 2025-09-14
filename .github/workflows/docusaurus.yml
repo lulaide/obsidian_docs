@@ -27,7 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
 
       # 1) 在 CI 里临时创建 Docusaurus 项目（不写入 main）
       - name: Scaffold Docusaurus
