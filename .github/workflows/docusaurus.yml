@@ -1,37 +1,51 @@
-name: Deploy Docusaurus to GitHub Pages
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy docusaurus to Pages
+
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches: [ main ]
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write        # 允许推送到 gh-pages 分支
-  pages: read
+  contents: read
+  pages: write
   id-token: write
 
-jobs:
-  build-deploy:
-    runs-on: ubuntu-latest
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
         with:
-          node-version: 18
-          cache: 'npm'
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+          version: latest
+          run_install: false
+      - name: insatll
+        run: | 
+          pnpm install --frozen-lockfile
+          pnpm build
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-
+          # Upload entire repository
+          path: './build'
+      - name: Deploy to GitHub Pages
+        id: deployment
