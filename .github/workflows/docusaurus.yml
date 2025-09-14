@@ -1,29 +1,37 @@
 name: Deploy Docusaurus to GitHub Pages
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write        # 允许推送到 gh-pages 分支
+  pages: read
+  id-token: write
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
+      - name: Use Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 18
+          cache: 'npm'
 
-      - name: Install Docusaurus
-        run: npm install -g docusaurus-cli
+      - name: Install deps
+        run: npm ci
 
-      - name: Build Docusaurus
+      - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages
-          folder: build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+
