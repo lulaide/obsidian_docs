@@ -3,9 +3,7 @@ source: "https://docs.github.com/en/actions/get-started/understand-github-action
 tags:
   - "action"
 ---
-## 理解 GitHub Actions
-
-## 在本文中
+# 理解 GitHub Actions
 
 ## 概述
 
