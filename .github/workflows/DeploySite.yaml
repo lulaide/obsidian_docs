@@ -1,0 +1,51 @@
+name: Deploy Docusaurus site
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs-site repository
+        uses: actions/checkout@v4
+        with:
+          repository: lulaide/docs-site
+          path: docs-site
+          fetch-depth: 0
+
+      - name: Checkout current repository into docs-site/docs
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          path: docs-site/docs
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: docs-site
+        run: npm ci
+
+      - name: Build Docusaurus site
+        working-directory: docs-site
+        run: npm run build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs-site/build
+          publish_branch: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: '41898282+github-actions[bot]@users.noreply.github.com'
